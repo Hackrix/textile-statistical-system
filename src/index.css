@@ -1,0 +1,16 @@
+/* Let Tailwind scan source files for class names */
+@reference ../index.html;
+@reference ./**/*.jsx;
+@reference ./**/*.tsx;
+@reference ./**/*.js;
+@reference ./**/*.ts;
+
+@import "tailwindcss";
+
+/* Global base styles (no @apply to avoid v4 issues) */
+@layer base {
+  html, body, #root {
+    height: 100%;
+    scroll-behavior: smooth;
+  }
+}

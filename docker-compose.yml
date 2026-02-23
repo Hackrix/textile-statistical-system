@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # Local Development
+  tsrs-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: local
+    container_name: tsrs-local
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_ENV=local
+      - VITE_API_BASE_URL=http://localhost:3000/api
+      - VITE_APP_NAME=TSRS Local
+      - VITE_ENABLE_DEBUG=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Development Environment
+  tsrs-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: dev
+    container_name: tsrs-dev
+    ports:
+      - "8081:80"
+    environment:
+      - VITE_ENV=development
+      - VITE_API_BASE_URL=https://dev-api.tsrs.gov.in/api
+      - VITE_APP_NAME=TSRS Development
+      - VITE_ENABLE_DEBUG=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # UAT Environment
+  tsrs-uat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: uat
+    container_name: tsrs-uat
+    ports:
+      - "8082:80"
+    environment:
+      - VITE_ENV=uat
+      - VITE_API_BASE_URL=https://uat-api.tsrs.gov.in/api
+      - VITE_APP_NAME=TSRS UAT
+      - VITE_ENABLE_DEBUG=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Production Environment
+  tsrs-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: prod
+    container_name: tsrs-prod
+    ports:
+      - "8083:80"
+    environment:
+      - VITE_ENV=production
+      - VITE_API_BASE_URL=https://api.tsrs.gov.in/api
+      - VITE_APP_NAME=TSRS
+      - VITE_ENABLE_DEBUG=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+networks:
+  default:
+    name: tsrs-network
